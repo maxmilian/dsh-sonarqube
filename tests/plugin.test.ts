@@ -28,6 +28,7 @@ describe('DSH plugin entry', () => {
       'zh-CN': expect.stringContaining('SONARQUBE_TOKEN'),
       'ja-JP': expect.stringContaining('SONARQUBE_TOKEN'),
     })
+    expect(Config.dict?.token?.meta.role).toBe('secret')
   })
 
   pluginIt('registers exactly the six read-only tools', () => {

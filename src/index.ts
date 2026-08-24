@@ -40,7 +40,7 @@ export interface Config {
 /** Schemastery configuration exposed by the plugin. */
 export const Config: Schema<Config> = Schema.object({
   baseUrl: Schema.string(),
-  token: Schema.string(),
+  token: Schema.string().role('secret'),
   requestTimeoutMs: Schema.number().default(30_000),
   maxResponseBytes: Schema.number().default(5 * 1024 * 1024),
 }).i18n(CONFIG_I18N)
