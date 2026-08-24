@@ -29,6 +29,7 @@ API から情報が提供される場合、issue と hotspot の結果には正�
 
 - 互換性のある `@deepseek-ai/dsh-tools` API を備えた DeepSeek Harness
 - Node.js 22 以降
+- GitHub source からのインストールまたはローカル開発には Bun 1.3.5 以降
 - SonarQube Community Build の URL と、対象プロジェクトへのアクセス権を持つ token
 
 2026-08-24 に SonarQube Community Build `26.8.0.126808` と SonarScanner CLI
@@ -92,7 +93,7 @@ dsh plugin --profile web add ./dsh-sonarqube-0.1.0.tgz
 GitHub source からインストールします。
 
 ```sh
-dsh plugin --profile web add github:YOUR_ORG/dsh-sonarqube#PINNED_COMMIT
+dsh plugin --profile web add github:maxmilian/dsh-sonarqube#PINNED_COMMIT
 ```
 
 Git からのインストールでは `lib` ではなく source を取得するため、このパッケージには Bun

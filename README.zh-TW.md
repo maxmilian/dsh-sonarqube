@@ -27,6 +27,7 @@ hotspots。
 
 - DeepSeek Harness，且 `@deepseek-ai/dsh-tools` API 版本相容
 - Node.js 22 或更新版本
+- 從 GitHub source 安裝或在本機開發時，需要 Bun 1.3.5 或更新版本
 - SonarQube Community Build URL，以及有權存取目標專案的 token
 
 已於 2026-08-24 使用 SonarQube Community Build `26.8.0.126808` 與 SonarScanner CLI
@@ -88,7 +89,7 @@ dsh plugin --profile web add ./dsh-sonarqube-0.1.0.tgz
 從 GitHub source 安裝：
 
 ```sh
-dsh plugin --profile web add github:YOUR_ORG/dsh-sonarqube#PINNED_COMMIT
+dsh plugin --profile web add github:maxmilian/dsh-sonarqube#PINNED_COMMIT
 ```
 
 Git 安裝取得的是 source，而非 `lib`，因此套件包含使用 Bun build 的 `prepare` script。

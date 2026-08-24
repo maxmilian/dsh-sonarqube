@@ -28,6 +28,7 @@ modify issues or hotspots.
 
 - DeepSeek Harness with compatible `@deepseek-ai/dsh-tools` APIs
 - Node.js 22 or newer
+- Bun 1.3.5 or newer when installing from GitHub source or developing locally
 - A SonarQube Community Build URL and a token with access to the requested projects
 
 Live compatibility was manually validated on 2026-08-24 against SonarQube Community Build
@@ -89,7 +90,7 @@ dsh plugin --profile web add ./dsh-sonarqube-0.1.0.tgz
 From GitHub source:
 
 ```sh
-dsh plugin --profile web add github:YOUR_ORG/dsh-sonarqube#PINNED_COMMIT
+dsh plugin --profile web add github:maxmilian/dsh-sonarqube#PINNED_COMMIT
 ```
 
 Git installs receive source rather than `lib`, so this package includes a `prepare` script that
