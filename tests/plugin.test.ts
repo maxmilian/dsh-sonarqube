@@ -15,6 +15,21 @@ describe('DSH plugin entry', () => {
     expect(Config).toBeDefined()
   })
 
+  it('exposes localized plugin configuration descriptions', () => {
+    expect(Config.meta.description).toMatchObject({
+      en: 'Read-only SonarQube Community Build integration settings.',
+      'zh-TW': 'SonarQube Community Build 唯讀整合設定。',
+      'zh-CN': 'SonarQube Community Build 只读集成设置。',
+      'ja-JP': 'SonarQube Community Build の読み取り専用連携設定。',
+    })
+    expect(Config.dict?.token?.meta.description).toMatchObject({
+      en: expect.stringContaining('SONARQUBE_TOKEN'),
+      'zh-TW': expect.stringContaining('SONARQUBE_TOKEN'),
+      'zh-CN': expect.stringContaining('SONARQUBE_TOKEN'),
+      'ja-JP': expect.stringContaining('SONARQUBE_TOKEN'),
+    })
+  })
+
   pluginIt('registers exactly the six read-only tools', () => {
     const registeredNames: string[] = []
     const register = vi.fn((definition: { name: string }) => {

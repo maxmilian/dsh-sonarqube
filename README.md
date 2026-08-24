@@ -1,5 +1,7 @@
 # dsh-sonarqube
 
+English | [繁體中文](README.zh-TW.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
+
 `dsh-sonarqube` is a free, open-source, read-only DeepSeek Harness plugin for the
 SonarQube Community Build Web API. It lets an agent inspect Quality Gates, issues,
 Security Hotspots, coverage, duplication, and other project measures without changing
@@ -120,6 +122,18 @@ most 100 characters. With no metric list it requests:
 coverage, duplicated_lines_density, bugs, vulnerabilities, code_smells, security_hotspots
 ```
 
+## Internationalization
+
+Schemastery configuration descriptions are localized for English, Traditional Chinese,
+Simplified Chinese, and Japanese. The map includes DSH's current `en` and `zh` IDs plus common
+regional IDs: `en-US`, `zh-CN`, `zh-TW`, `ja`, and `ja-JP`. A locale is selectable only when the
+DSH host registers it; the current core UI ships `en` and `zh`.
+
+The current `@deepseek-ai/dsh-tools` API accepts one model-facing description string per tool and
+parameter, so those descriptions remain in English. This avoids claiming runtime localization that
+DSH cannot currently consume. Repository documentation is available through the language links at
+the top of each README.
+
 ## Security and error behavior
 
 - Uses `Authorization: Bearer ...` and never returns or logs the token.
@@ -147,13 +161,6 @@ bun pm pack
 
 Tests use Vitest with mocked `fetch`; they do not require a live SonarQube server. Coverage gates
 for lines, statements, functions, and branches are all set to at least 80%.
-
-## 繁中快速說明
-
-這是一個給 DeepSeek Harness 使用的唯讀 SonarQube Community Build plugin。建議用
-`SONARQUBE_URL` 與 `SONARQUBE_TOKEN` 設定連線，避免把 token 寫進
-`cordis.patch.yml`。v0.1 只查詢 Quality Gate、issues、Security Hotspots 與 measures，
-不會修改 SonarQube 狀態。
 
 ## License
 

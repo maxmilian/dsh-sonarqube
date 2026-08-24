@@ -7,6 +7,7 @@ import type { Context } from '@deepseek-ai/cordis'
 import Schema from '@deepseek-ai/schemastery'
 
 import { createSonarQubeClient } from './client.js'
+import { CONFIG_I18N } from './locales.js'
 import { registerSonarQubeTools } from './tools.js'
 
 export {
@@ -42,7 +43,7 @@ export const Config: Schema<Config> = Schema.object({
   token: Schema.string(),
   requestTimeoutMs: Schema.number().default(30_000),
   maxResponseBytes: Schema.number().default(5 * 1024 * 1024),
-})
+}).i18n(CONFIG_I18N)
 
 /** Creates the client and registers all read-only tools. */
 export function apply(ctx: Context, config: Config): void {
