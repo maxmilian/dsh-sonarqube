@@ -41,7 +41,11 @@ export interface Config {
 export const Config: Schema<Config> = Schema.object({
   baseUrl: Schema.string(),
   token: Schema.string().role('secret'),
-  requestTimeoutMs: Schema.number().step(1).min(1).max(5 * 60_000).default(30_000),
+  requestTimeoutMs: Schema.number()
+    .step(1)
+    .min(1)
+    .max(5 * 60_000)
+    .default(30_000),
   maxResponseBytes: Schema.number()
     .step(1)
     .min(1)
