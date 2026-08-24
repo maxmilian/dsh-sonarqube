@@ -198,7 +198,9 @@ function normalizeBaseUrl(value: string): string {
   }
   if (url.search || url.hash)
     throw configError('baseUrl must not include a query string or fragment.')
-  url.pathname = `${url.pathname.replace(/\/+$/, '')}/`
+  let pathnameEnd = url.pathname.length
+  while (pathnameEnd > 0 && url.pathname.codePointAt(pathnameEnd - 1) === 47) pathnameEnd -= 1
+  url.pathname = `${url.pathname.slice(0, pathnameEnd)}/`
   return url.toString()
 }
 

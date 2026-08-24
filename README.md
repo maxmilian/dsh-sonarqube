@@ -28,8 +28,14 @@ modify issues or hotspots.
 - Node.js 22 or newer
 - A SonarQube Community Build URL and a token with access to the requested projects
 
-No specific SonarQube release is claimed as tested. The plugin uses the documented Web API
-contracts and mock-based tests; verify it against your own instance before relying on it in CI.
+Live compatibility was manually validated on 2026-08-24 against SonarQube Community Build
+`26.8.0.126808` with SonarScanner CLI `8.0.1.6346`. This does not imply compatibility with every
+SonarQube release; verify the plugin against your own instance before relying on it in CI.
+
+The live validation covered system status, Quality Gate, issue search with source-file and line
+mapping, default measures, empty Security Hotspot search results, and safe hotspot 404 handling.
+Community Build `26.8.0.126808` exposed no `SECURITY_HOTSPOT` rules, so a successful
+`sonarqube_get_hotspot` response remains covered by mocked API tests rather than that live run.
 
 ## Configuration
 

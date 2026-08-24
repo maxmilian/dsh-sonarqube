@@ -48,6 +48,15 @@ describe('configuration', () => {
     expect(createSonarQubeClient({}, env, vi.fn())).toBeInstanceOf(SonarQubeClient)
   })
 
+  it('normalizes repeated trailing slashes in the base URL', () => {
+    const resolved = resolveConfig(
+      { baseUrl: 'https://sonar.example.com/sonarqube////', token: 'token' },
+      {},
+    )
+
+    expect(resolved.baseUrl).toBe('https://sonar.example.com/sonarqube/')
+  })
+
   it.each([
     [{ token: 'token' }, 'baseUrl'],
     [{ baseUrl: 'https://sonar.example.com' }, 'token'],
