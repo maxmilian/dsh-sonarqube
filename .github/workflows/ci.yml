@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.5
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+      - run: bun run typecheck
+      - run: bun run test --coverage
+      - run: bun run build
+      - name: Pack smoke test
+        run: |
+          mkdir -p artifacts
+          bun pm pack --destination artifacts
+          tarball="$(find artifacts -name 'dsh-sonarqube-*.tgz' -print -quit)"
+          test -n "$tarball"
+          tar -tzf "$tarball" | tee /tmp/package-files.txt
+          grep -q 'package/lib/index.js' /tmp/package-files.txt
+          grep -q 'package/lib/index.d.ts' /tmp/package-files.txt
+          grep -q 'package/cordis.patch.yml' /tmp/package-files.txt
+          grep -q 'package/README.md' /tmp/package-files.txt
+          grep -q 'package/LICENSE' /tmp/package-files.txt
