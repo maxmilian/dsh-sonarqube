@@ -2,6 +2,15 @@
   "name": "dsh-sonarqube",
   "version": "0.1.0",
   "description": "Read-only SonarQube Community Build tools for DeepSeek Harness.",
+  "homepage": "https://github.com/maxmilian/dsh-sonarqube#readme",
+  "bugs": {
+    "url": "https://github.com/maxmilian/dsh-sonarqube/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxmilian/dsh-sonarqube.git"
+  },
+  "author": "maxmilian",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -36,8 +45,12 @@
     "code-quality"
   ],
   "license": "MIT",
+  "packageManager": "bun@1.3.5",
   "engines": {
-    "node": ">=22.0.0"
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "^4.0.1",

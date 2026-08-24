@@ -28,7 +28,7 @@ API から情報が提供される場合、issue と hotspot の結果には正�
 ## 必要条件
 
 - 互換性のある `@deepseek-ai/dsh-tools` API を備えた DeepSeek Harness
-- Node.js 22 以降
+- Node.js 22.19 以降の 22.x、または Node.js 24 以降
 - GitHub source からのインストールまたはローカル開発には Bun 1.3.5 以降
 - SonarQube Community Build の URL と、対象プロジェクトへのアクセス権を持つ token
 

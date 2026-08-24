@@ -26,7 +26,7 @@ hotspots。
 ## 必要條件
 
 - DeepSeek Harness，且 `@deepseek-ai/dsh-tools` API 版本相容
-- Node.js 22 或更新版本
+- Node.js 22.19 以上的 22.x 版本，或 Node.js 24 以上版本
 - 從 GitHub source 安裝或在本機開發時，需要 Bun 1.3.5 或更新版本
 - SonarQube Community Build URL，以及有權存取目標專案的 token
 

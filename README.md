@@ -27,7 +27,7 @@ modify issues or hotspots.
 ## Requirements
 
 - DeepSeek Harness with compatible `@deepseek-ai/dsh-tools` APIs
-- Node.js 22 or newer
+- Node.js 22.19 or newer in the 22.x line, or Node.js 24 or newer
 - Bun 1.3.5 or newer when installing from GitHub source or developing locally
 - A SonarQube Community Build URL and a token with access to the requested projects
 
