@@ -150,7 +150,7 @@ tool definitions，讓後續 migration 保持局部化。
 bun install --frozen-lockfile
 bun run lint
 bun run typecheck
-bun test --coverage
+bun run test --coverage
 bun run build
 bun pm pack
 ```

@@ -159,7 +159,7 @@ endpoints は tool definitions に分散させず、意図的に `src/client.ts`
 bun install --frozen-lockfile
 bun run lint
 bun run typecheck
-bun test --coverage
+bun run test --coverage
 bun run build
 bun pm pack
 ```
