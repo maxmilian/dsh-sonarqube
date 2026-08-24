@@ -29,6 +29,11 @@ jobs:
           tar -tzf "$tarball" | tee /tmp/package-files.txt
           grep -q 'package/lib/index.js' /tmp/package-files.txt
           grep -q 'package/lib/index.d.ts' /tmp/package-files.txt
+          grep -q 'package/lib/locales.js' /tmp/package-files.txt
+          grep -q 'package/lib/locales.d.ts' /tmp/package-files.txt
           grep -q 'package/cordis.patch.yml' /tmp/package-files.txt
           grep -q 'package/README.md' /tmp/package-files.txt
+          grep -q 'package/README.zh-TW.md' /tmp/package-files.txt
+          grep -q 'package/README.zh-CN.md' /tmp/package-files.txt
+          grep -q 'package/README.ja.md' /tmp/package-files.txt
           grep -q 'package/LICENSE' /tmp/package-files.txt
