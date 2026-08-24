@@ -166,7 +166,7 @@ export class SonarQubeClient {
       )
     }
     const contentType = response.headers.get('content-type')?.toLowerCase() ?? ''
-    if (!contentType.includes('application/json')) {
+    if (!isJsonContentType(contentType)) {
       await response.body?.cancel()
       throw new SonarQubeApiError('SonarQube returned a non-JSON response.', {
         code: 'INVALID_RESPONSE',
@@ -175,6 +175,14 @@ export class SonarQubeClient {
     const body = await readBoundedBody(response, this.#config.maxResponseBytes)
     return { data: parseJsonObject(body), meta: tokenExpiration ? { tokenExpiration } : {} }
   }
+}
+
+function isJsonContentType(value: string): boolean {
+  const mediaType = value.split(';', 1)[0]?.trim()
+  return (
+    mediaType === 'application/json' ||
+    (mediaType?.startsWith('application/') === true && mediaType.endsWith('+json'))
+  )
 }
 
 /** Creates a client using plugin config over environment variables. */

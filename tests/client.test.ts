@@ -341,6 +341,18 @@ describe('safe response errors', () => {
     expect(result.meta).toEqual({})
   })
 
+  it('accepts application media types with a JSON suffix', async () => {
+    const fetchMock = vi.fn<MockFetch>().mockResolvedValue(
+      new Response('{"status":"UP"}', {
+        headers: { 'Content-Type': 'application/problem+json; charset=utf-8' },
+      }),
+    )
+
+    await expect(createClient(fetchMock).systemStatus()).resolves.toMatchObject({
+      data: { status: 'UP' },
+    })
+  })
+
   it('rejects non-JSON, invalid JSON, and non-object JSON responses', async () => {
     const plain = vi
       .fn<MockFetch>()
