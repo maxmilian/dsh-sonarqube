@@ -16,7 +16,7 @@ const DEFAULT_TIMEOUT_MS = 30_000
 const DEFAULT_MAX_RESPONSE_BYTES = 5 * 1024 * 1024
 const MAX_TIMEOUT_MS = 5 * 60_000
 const MAX_RESPONSE_BYTES = 50 * 1024 * 1024
-const MAX_PAGE = 10_000
+const MAX_SEARCH_RESULTS = 10_000
 const MAX_PAGE_SIZE = 100
 const MAX_FILTER_VALUES = 20
 const MAX_METRIC_KEYS = 20
@@ -260,11 +260,14 @@ function appendList(query: URLSearchParams, key: string, values?: readonly strin
 }
 
 function appendPagination(query: URLSearchParams, page = 1, pageSize = 50): void {
-  if (!Number.isSafeInteger(page) || page < 1 || page > MAX_PAGE) {
-    throw inputError(`page must be an integer between 1 and ${MAX_PAGE}.`)
+  if (!Number.isSafeInteger(page) || page < 1) {
+    throw inputError('page must be a positive integer.')
   }
   if (!Number.isSafeInteger(pageSize) || pageSize < 1 || pageSize > MAX_PAGE_SIZE) {
     throw inputError(`pageSize must be an integer between 1 and ${MAX_PAGE_SIZE}.`)
+  }
+  if (page * pageSize > MAX_SEARCH_RESULTS) {
+    throw inputError(`page and pageSize must stay within the first ${MAX_SEARCH_RESULTS} results.`)
   }
   query.set('p', String(page))
   query.set('ps', String(pageSize))

@@ -112,9 +112,9 @@ Get coverage and duplicated_lines_density for acme-api.
 Show the full Security Hotspot with key AX_example.
 ```
 
-`branch` 和 `pull_request` 互斥。搜索页码限制为 `1..10000`，每页结果限制为
-`1..100`。Measures request 最多接受 20 个 metric keys，每个最长 100 个字符。未指定
-metric 列表时，将查询：
+`branch` 和 `pull_request` 互斥。每页结果限制为 `1..100`，且 `page × page_size` 必须位于
+前 10,000 条结果内。Measures request 最多接受 20 个 metric keys，每个最长 100 个字符。
+未指定 metric 列表时，将查询：
 
 ```text
 coverage, duplicated_lines_density, bugs, vulnerabilities, code_smells, security_hotspots

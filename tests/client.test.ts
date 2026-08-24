@@ -218,11 +218,20 @@ describe('validation and operational bounds', () => {
 
   it.each([
     [{ projectKey: 'project', page: 0 }, 'page'],
-    [{ projectKey: 'project', page: 10_001 }, 'page'],
+    [{ projectKey: 'project', page: 101, pageSize: 100 }, 'first 10000 results'],
     [{ projectKey: 'project', pageSize: 101 }, 'pageSize'],
   ])('enforces pagination bounds %#', async (params, expected) => {
     const client = createClient(jsonFetch({}))
     await expect(client.searchIssues(params)).rejects.toThrow(expected)
+  })
+
+  it('allows the final page within the 10000-result search window', async () => {
+    const fetchMock = jsonFetch({ issues: [] })
+    const client = createClient(fetchMock)
+
+    await client.searchIssues({ projectKey: 'project', page: 100, pageSize: 100 })
+
+    expect(calledUrl(fetchMock).searchParams.get('p')).toBe('100')
   })
 
   it('limits measure key count and syntax', async () => {

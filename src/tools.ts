@@ -108,7 +108,10 @@ function issueSearchParameters() {
     statuses: { type: 'array', items: { type: 'string', enum: ISSUE_STATUSES } },
     branch: { type: 'string', description: 'Branch name' },
     pull_request: { type: 'string', description: 'Pull request key' },
-    page: { type: 'integer', description: 'Page number, 1-10000' },
+    page: {
+      type: 'integer',
+      description: '1-based page number; page times page_size must not exceed 10000',
+    },
     page_size: { type: 'integer', description: 'Results per page, 1-100' },
   } as const
 }
@@ -123,7 +126,10 @@ function registerHotspotSearch(ctx: Context, client: SonarQubeClient): void {
         status: { type: 'string', enum: HOTSPOT_STATUSES },
         branch: { type: 'string', description: 'Branch name' },
         pull_request: { type: 'string', description: 'Pull request key' },
-        page: { type: 'integer', description: 'Page number, 1-10000' },
+        page: {
+          type: 'integer',
+          description: '1-based page number; page times page_size must not exceed 10000',
+        },
         page_size: { type: 'integer', description: 'Results per page, 1-100' },
       },
       output: { schema: OUTPUT_SCHEMA, render: renderJson },

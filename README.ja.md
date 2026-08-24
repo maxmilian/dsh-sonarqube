@@ -118,9 +118,10 @@ Get coverage and duplicated_lines_density for acme-api.
 Show the full Security Hotspot with key AX_example.
 ```
 
-`branch` と `pull_request` は同時に指定できません。検索ページは `1..10000`、1 ページの
-結果数は `1..100` に制限されます。Measures request は最大 20 個の metric keys を受け付け、
-各 key は最大 100 文字です。metric リストを省略すると、次の項目を取得します。
+`branch` と `pull_request` は同時に指定できません。1 ページの結果数は `1..100` に制限され、
+`page × page_size` は最初の 10,000 件の範囲内である必要があります。Measures request は最大
+20 個の metric keys を受け付け、各 key は最大 100 文字です。metric リストを省略すると、
+次の項目を取得します。
 
 ```text
 coverage, duplicated_lines_density, bugs, vulnerabilities, code_smells, security_hotspots

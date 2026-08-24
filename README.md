@@ -114,9 +114,9 @@ Get coverage and duplicated_lines_density for acme-api.
 Show the full Security Hotspot with key AX_example.
 ```
 
-`branch` and `pull_request` are mutually exclusive. Search pagination is bounded to pages
-`1..10000` and page sizes `1..100`. A measures request accepts at most 20 metric keys, each at
-most 100 characters. With no metric list it requests:
+`branch` and `pull_request` are mutually exclusive. Search page sizes are bounded to `1..100`, and
+`page × page_size` must stay within the first 10,000 results. A measures request accepts at most 20
+metric keys, each at most 100 characters. With no metric list it requests:
 
 ```text
 coverage, duplicated_lines_density, bugs, vulnerabilities, code_smells, security_hotspots
