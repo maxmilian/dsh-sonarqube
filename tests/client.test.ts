@@ -286,6 +286,20 @@ describe('validation and operational bounds', () => {
 
     await expect(client.systemStatus()).rejects.toMatchObject({ code: 'RESPONSE_TOO_LARGE' })
   })
+
+  it('cancels an oversized response body reported by Content-Length', async () => {
+    const cancel = vi.fn()
+    const body = new ReadableStream<Uint8Array>({ cancel })
+    const fetchMock = vi.fn<MockFetch>().mockResolvedValue(
+      new Response(body, {
+        headers: { 'Content-Length': '100', 'Content-Type': 'application/json' },
+      }),
+    )
+    const client = new SonarQubeClient({ ...BASE_CONFIG, maxResponseBytes: 20 }, fetchMock)
+
+    await expect(client.systemStatus()).rejects.toMatchObject({ code: 'RESPONSE_TOO_LARGE' })
+    expect(cancel).toHaveBeenCalledOnce()
+  })
 })
 
 describe('safe response errors', () => {

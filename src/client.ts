@@ -332,7 +332,10 @@ function safeHeader(headers: Headers, name: string, token: string): string | und
 
 async function readBoundedBody(response: Response, maximum: number): Promise<string> {
   const contentLength = response.headers.get('content-length')
-  if (contentLength && Number(contentLength) > maximum) throw responseTooLarge(maximum)
+  if (contentLength && Number(contentLength) > maximum) {
+    await response.body?.cancel()
+    throw responseTooLarge(maximum)
+  }
   if (!response.body) return ''
   const reader = response.body.getReader()
   const decoder = new TextDecoder()
