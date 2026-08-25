@@ -1,3 +1,5 @@
+import type { ResolvedSonarQubeConfig, SonarQubeConfig } from './config.js'
+import { resolveConfig, validateResolvedConfig } from './config.js'
 import { createHttpError, SonarQubeApiError } from './errors.js'
 import type {
   AnalysisSelector,
@@ -6,16 +8,12 @@ import type {
   JsonObject,
   JsonValue,
   QualityGateParams,
-  ResolvedSonarQubeConfig,
   SearchHotspotsParams,
   SearchIssuesParams,
-  SonarQubeConfig,
 } from './types.js'
 
-const DEFAULT_TIMEOUT_MS = 30_000
-const DEFAULT_MAX_RESPONSE_BYTES = 5 * 1024 * 1024
-const MAX_TIMEOUT_MS = 5 * 60_000
-const MAX_RESPONSE_BYTES = 50 * 1024 * 1024
+export { resolveConfig }
+
 const MAX_SEARCH_RESULTS = 10_000
 const MAX_PAGE_SIZE = 100
 const MAX_FILTER_VALUES = 20
@@ -41,23 +39,6 @@ interface RequestContext {
   readonly didTimeout: () => boolean
 }
 
-/** Resolves plugin config over environment variables and validates safe bounds. */
-export function resolveConfig(
-  config: SonarQubeConfig = {},
-  env: NodeJS.ProcessEnv = process.env,
-): ResolvedSonarQubeConfig {
-  const baseUrl = config.baseUrl?.trim() || env.SONARQUBE_URL?.trim()
-  const token = config.token?.trim() || env.SONARQUBE_TOKEN?.trim()
-  if (!baseUrl) throw configError('baseUrl or SONARQUBE_URL is required.')
-  if (!token) throw configError('token or SONARQUBE_TOKEN is required.')
-  const normalizedUrl = normalizeBaseUrl(baseUrl)
-  const requestTimeoutMs = config.requestTimeoutMs ?? DEFAULT_TIMEOUT_MS
-  const maxResponseBytes = config.maxResponseBytes ?? DEFAULT_MAX_RESPONSE_BYTES
-  assertBoundedInteger('requestTimeoutMs', requestTimeoutMs, MAX_TIMEOUT_MS)
-  assertBoundedInteger('maxResponseBytes', maxResponseBytes, MAX_RESPONSE_BYTES)
-  return { baseUrl: normalizedUrl, token, requestTimeoutMs, maxResponseBytes }
-}
-
 /** Read-only HTTP client for the SonarQube Community Build Web API. */
 export class SonarQubeClient {
   readonly #config: ResolvedSonarQubeConfig
@@ -65,7 +46,7 @@ export class SonarQubeClient {
 
   /** Creates a client from resolved configuration. */
   constructor(config: ResolvedSonarQubeConfig, fetchImplementation: FetchImplementation = fetch) {
-    this.#config = { ...config, baseUrl: normalizeBaseUrl(config.baseUrl) }
+    this.#config = validateResolvedConfig(config)
     this.#fetch = fetchImplementation
   }
 
@@ -194,38 +175,8 @@ export function createSonarQubeClient(
   return new SonarQubeClient(resolveConfig(config, env), fetchImplementation)
 }
 
-function normalizeBaseUrl(value: string): string {
-  let url: URL
-  try {
-    url = new URL(value)
-  } catch {
-    throw configError('baseUrl must be a valid HTTP or HTTPS URL.')
-  }
-  if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) {
-    throw configError('baseUrl must be an HTTP(S) URL without embedded credentials.')
-  }
-  if (url.search || url.hash)
-    throw configError('baseUrl must not include a query string or fragment.')
-  let pathnameEnd = url.pathname.length
-  while (pathnameEnd > 0 && url.pathname.codePointAt(pathnameEnd - 1) === 47) pathnameEnd -= 1
-  url.pathname = `${url.pathname.slice(0, pathnameEnd)}/`
-  return url.toString()
-}
-
-function configError(message: string): SonarQubeApiError {
-  return new SonarQubeApiError(`Invalid SonarQube configuration: ${message}`, {
-    code: 'INVALID_CONFIG',
-  })
-}
-
 function inputError(message: string): SonarQubeApiError {
   return new SonarQubeApiError(`Invalid SonarQube input: ${message}`, { code: 'INVALID_INPUT' })
-}
-
-function assertBoundedInteger(name: string, value: number, maximum: number): void {
-  if (!Number.isSafeInteger(value) || value < 1 || value > maximum) {
-    throw configError(`${name} must be an integer between 1 and ${maximum}.`)
-  }
 }
 
 function assertText(name: string, value: string, maximum = MAX_VALUE_LENGTH): void {
@@ -415,7 +366,7 @@ function enrichFinding(
   if (!isJsonObject(finding)) return finding
   const component = typeof finding.component === 'string' ? finding.component : undefined
   if (!component) return finding
-  const filePath = paths.get(component) ?? component.replace(`${projectKey}:`, '')
+  const filePath = paths.get(component) ?? relativeComponentPath(component, projectKey)
   return { ...finding, location: sourceLocation(finding, component, filePath) }
 }
 
@@ -427,7 +378,8 @@ function enrichSingleFinding(data: JsonObject): JsonObject {
   const projectValue = data.project
   const projectKey =
     typeof projectValue === 'string' ? projectValue : (objectString(projectValue, 'key') ?? '')
-  const filePath = objectString(componentValue, 'path') ?? component.replace(`${projectKey}:`, '')
+  const filePath =
+    objectString(componentValue, 'path') ?? relativeComponentPath(component, projectKey)
   return { ...data, location: sourceLocation(data, component, filePath) }
 }
 
@@ -435,6 +387,11 @@ function objectString(value: JsonValue | undefined, key: string): string | undef
   if (!isJsonObject(value)) return undefined
   const field = value[key]
   return typeof field === 'string' ? field : undefined
+}
+
+function relativeComponentPath(component: string, projectKey: string): string {
+  const prefix = `${projectKey}:`
+  return projectKey && component.startsWith(prefix) ? component.slice(prefix.length) : component
 }
 
 function sourceLocation(finding: JsonObject, component: string, filePath: string): JsonObject {

@@ -7,6 +7,13 @@ import type { Context } from '@deepseek-ai/cordis'
 import Schema from '@deepseek-ai/schemastery'
 
 import { createSonarQubeClient } from './client.js'
+import type { SonarQubeConfig } from './config.js'
+import {
+  DEFAULT_MAX_RESPONSE_BYTES,
+  DEFAULT_REQUEST_TIMEOUT_MS,
+  MAX_REQUEST_TIMEOUT_MS,
+  MAX_RESPONSE_BYTES,
+} from './config.js'
 import { CONFIG_I18N } from './locales.js'
 import { registerSonarQubeTools } from './tools.js'
 
@@ -16,6 +23,7 @@ export {
   resolveConfig,
   SonarQubeClient,
 } from './client.js'
+export type { ResolvedSonarQubeConfig, SonarQubeConfig } from './config.js'
 export { createHttpError, SonarQubeApiError } from './errors.js'
 export type * from './types.js'
 
@@ -26,16 +34,7 @@ export const name = 'dsh-sonarqube'
 export const inject = ['tools']
 
 /** Plugin configuration supplied through Cordis. */
-export interface Config {
-  /** SonarQube base URL. Falls back to SONARQUBE_URL. */
-  readonly baseUrl?: string
-  /** SonarQube token. Falls back to SONARQUBE_TOKEN. */
-  readonly token?: string
-  /** Per-request timeout in milliseconds. */
-  readonly requestTimeoutMs?: number
-  /** Maximum successful response body size in bytes. */
-  readonly maxResponseBytes?: number
-}
+export type Config = SonarQubeConfig
 
 /** Schemastery configuration exposed by the plugin. */
 export const Config: Schema<Config> = Schema.object({
@@ -44,13 +43,13 @@ export const Config: Schema<Config> = Schema.object({
   requestTimeoutMs: Schema.number()
     .step(1)
     .min(1)
-    .max(5 * 60_000)
-    .default(30_000),
+    .max(MAX_REQUEST_TIMEOUT_MS)
+    .default(DEFAULT_REQUEST_TIMEOUT_MS),
   maxResponseBytes: Schema.number()
     .step(1)
     .min(1)
-    .max(50 * 1024 * 1024)
-    .default(5 * 1024 * 1024),
+    .max(MAX_RESPONSE_BYTES)
+    .default(DEFAULT_MAX_RESPONSE_BYTES),
 }).i18n(CONFIG_I18N)
 
 /** Creates the client and registers all read-only tools. */

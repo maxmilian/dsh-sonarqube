@@ -17,22 +17,6 @@ export interface ApiResult<T extends JsonValue = JsonObject> {
   readonly meta: ApiMetadata
 }
 
-/** Runtime configuration accepted by the client and plugin. */
-export interface SonarQubeConfig {
-  readonly baseUrl?: string
-  readonly token?: string
-  readonly requestTimeoutMs?: number
-  readonly maxResponseBytes?: number
-}
-
-/** Fully validated runtime configuration. */
-export interface ResolvedSonarQubeConfig {
-  readonly baseUrl: string
-  readonly token: string
-  readonly requestTimeoutMs: number
-  readonly maxResponseBytes: number
-}
-
 /** Shared branch or pull-request selector. */
 export interface AnalysisSelector {
   readonly branch?: string

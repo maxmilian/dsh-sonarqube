@@ -70,6 +70,15 @@ describe('configuration', () => {
   ])('rejects invalid config %#', (config, expected) => {
     expect(() => resolveConfig(config, {})).toThrow(expected)
   })
+
+  it.each([
+    [{ ...BASE_CONFIG, baseUrl: 'not a URL' }, 'baseUrl'],
+    [{ ...BASE_CONFIG, token: ' ' }, 'token'],
+    [{ ...BASE_CONFIG, requestTimeoutMs: 0 }, 'requestTimeoutMs'],
+    [{ ...BASE_CONFIG, maxResponseBytes: Number.NaN }, 'maxResponseBytes'],
+  ])('validates direct client construction %#', (config, expected) => {
+    expect(() => new SonarQubeClient(config, vi.fn())).toThrow(expected)
+  })
 })
 
 describe('SonarQubeClient public methods', () => {
@@ -136,6 +145,25 @@ describe('SonarQubeClient public methods', () => {
         line: 8,
         location: { component: 'project:src/a.ts', filePath: 'src/a.ts', line: 8 },
       },
+    ])
+  })
+
+  it('only removes a project key from the component prefix fallback', async () => {
+    const fetchMock = jsonFetch({
+      issues: [
+        { key: 'I1', component: 'project:src/a.ts' },
+        { key: 'I2', component: 'other:project:src/b.ts' },
+      ],
+    })
+    const client = createClient(fetchMock)
+
+    const result = await client.searchIssues({ projectKey: 'project' })
+
+    expect(result.data.issues).toEqual([
+      expect.objectContaining({ location: expect.objectContaining({ filePath: 'src/a.ts' }) }),
+      expect.objectContaining({
+        location: expect.objectContaining({ filePath: 'other:project:src/b.ts' }),
+      }),
     ])
   })
 
