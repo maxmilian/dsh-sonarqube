@@ -87,7 +87,7 @@ Plugin config は環境変数より優先されます。
 
 ```sh
 dsh plugin --profile web add dsh-sonarqube
-dsh plugin --profile web add ./dsh-sonarqube-0.1.0.tgz
+dsh plugin --profile web add ./dsh-sonarqube-0.1.1.tgz
 ```
 
 GitHub source からインストールします。

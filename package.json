@@ -1,6 +1,6 @@
 {
   "name": "dsh-sonarqube",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Read-only SonarQube Community Build tools for DeepSeek Harness.",
   "homepage": "https://github.com/maxmilian/dsh-sonarqube#readme",
   "bugs": {

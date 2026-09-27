@@ -83,7 +83,7 @@ Plugin config 的優先順序高於環境變數：
 
 ```sh
 dsh plugin --profile web add dsh-sonarqube
-dsh plugin --profile web add ./dsh-sonarqube-0.1.0.tgz
+dsh plugin --profile web add ./dsh-sonarqube-0.1.1.tgz
 ```
 
 從 GitHub source 安裝：

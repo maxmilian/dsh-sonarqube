@@ -83,7 +83,7 @@ profile patch（后面的 row 会替换该 row 的完整 config）：
 
 ```sh
 dsh plugin --profile web add dsh-sonarqube
-dsh plugin --profile web add ./dsh-sonarqube-0.1.0.tgz
+dsh plugin --profile web add ./dsh-sonarqube-0.1.1.tgz
 ```
 
 从 GitHub source 安装：

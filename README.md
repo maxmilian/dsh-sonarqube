@@ -84,7 +84,7 @@ From a future npm release or a local tarball:
 
 ```sh
 dsh plugin --profile web add dsh-sonarqube
-dsh plugin --profile web add ./dsh-sonarqube-0.1.0.tgz
+dsh plugin --profile web add ./dsh-sonarqube-0.1.1.tgz
 ```
 
 From GitHub source:
