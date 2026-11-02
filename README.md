@@ -26,10 +26,25 @@ modify issues or hotspots.
 
 ## Requirements
 
-- DeepSeek Harness with compatible `@deepseek-ai/dsh-tools` APIs
+- DeepSeek Harness whose runtime matches the declared peer ranges: verified against
+  `@deepseek-ai/dsh-tools` `0.2.1-rc.5`, and the package also declares `0.1.0-rc.8`, `0.1.1-rc.2`,
+  and `0.1.7-rc.2`
 - Node.js 22.19 or newer in the 22.x line, or Node.js 24 or newer
 - Bun 1.3.5 or newer when installing from GitHub source or developing locally
 - A SonarQube Community Build URL and a token with access to the requested projects
+
+### DeepSeek Harness compatibility
+
+DSH refuses to install or mount a plugin whose manifest does not accept the running version: its
+`evaluatePluginCompatibility` check compares the runtime with the plugin's `engines.dsh` range, or
+with every `@deepseek-ai/dsh*` peer range when `engines.dsh` is absent. `tests/compatibility.test.ts`
+re-applies that rule to the installed `@deepseek-ai/dsh-tools`, so a dependency bump that forgets the
+matching peer range fails in CI instead of at install time. To run the plugin against an undeclared
+version anyway, grant the exact exemption DSH prints:
+
+```sh
+dsh plugin --profile web allow-version dsh-sonarqube@<plugin-version> --dsh-version <dsh-version> --accept-risk
+```
 
 Live compatibility was manually validated on 2026-08-24 against SonarQube Community Build
 `26.8.0.126808` with SonarScanner CLI `8.0.1.6346`. This does not imply compatibility with every
