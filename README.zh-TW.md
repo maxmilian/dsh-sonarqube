@@ -25,10 +25,23 @@ hotspots。
 
 ## 必要條件
 
-- DeepSeek Harness，且 `@deepseek-ai/dsh-tools` API 版本相容
+- DeepSeek Harness，且執行版本符合已宣告的 peer 範圍：已驗證 `@deepseek-ai/dsh-tools`
+  `0.2.1-rc.5`，套件同時宣告 `0.1.0-rc.8`、`0.1.1-rc.2` 與 `0.1.7-rc.2`
 - Node.js 22.19 以上的 22.x 版本，或 Node.js 24 以上版本
 - 從 GitHub source 安裝或在本機開發時，需要 Bun 1.3.5 或更新版本
 - SonarQube Community Build URL，以及有權存取目標專案的 token
+
+### DeepSeek Harness 相容性
+
+若 plugin 的 manifest 不接受目前執行版本，DSH 會拒絕安裝或掛載：其
+`evaluatePluginCompatibility` 檢查會拿執行版本比對 plugin 的 `engines.dsh` 範圍；沒有
+`engines.dsh` 時，則比對每一個 `@deepseek-ai/dsh*` peer 範圍。`tests/compatibility.test.ts`
+會用已安裝的 `@deepseek-ai/dsh-tools` 重跑同一條規則，因此忘記同步 peer 範圍的相依性升級會在
+CI 失敗，而不是在使用者安裝時才失敗。若仍要在未宣告的版本上執行，請授予 DSH 印出的精確豁免：
+
+```sh
+dsh plugin --profile web allow-version dsh-sonarqube@<plugin-version> --dsh-version <dsh-version> --accept-risk
+```
 
 已於 2026-08-24 使用 SonarQube Community Build `26.8.0.126808` 與 SonarScanner CLI
 `8.0.1.6346` 進行人工相容性驗證。這不代表與所有 SonarQube 版本皆相容；在 CI 採用前，

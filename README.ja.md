@@ -27,10 +27,25 @@ API から情報が提供される場合、issue と hotspot の結果には正�
 
 ## 必要条件
 
-- 互換性のある `@deepseek-ai/dsh-tools` API を備えた DeepSeek Harness
+- 実行中のバージョンが宣言済みの peer 範囲に収まる DeepSeek Harness: `@deepseek-ai/dsh-tools`
+  `0.2.1-rc.5` で検証済みで、`0.1.0-rc.8`、`0.1.1-rc.2`、`0.1.7-rc.2` も宣言しています
 - Node.js 22.19 以降の 22.x、または Node.js 24 以降
 - GitHub source からのインストールまたはローカル開発には Bun 1.3.5 以降
 - SonarQube Community Build の URL と、対象プロジェクトへのアクセス権を持つ token
+
+### DeepSeek Harness との互換性
+
+plugin の manifest が実行中のバージョンを受け入れない場合、DSH はインストールもマウントも
+拒否します。`evaluatePluginCompatibility` は実行中のバージョンを plugin の `engines.dsh` 範囲と
+比較し、`engines.dsh` が無い場合は `@deepseek-ai/dsh*` の各 peer 範囲と比較します。
+`tests/compatibility.test.ts` はインストール済みの `@deepseek-ai/dsh-tools` に対して同じ規則を
+再適用するため、peer 範囲の更新を忘れた依存更新は、利用者のインストール時ではなく CI で
+失敗します。宣言していないバージョンでどうしても動かす場合は、DSH が表示する正確な例外を
+付与してください:
+
+```sh
+dsh plugin --profile web allow-version dsh-sonarqube@<plugin-version> --dsh-version <dsh-version> --accept-risk
+```
 
 2026-08-24 に SonarQube Community Build `26.8.0.126808` と SonarScanner CLI
 `8.0.1.6346` を使用して手動で互換性を検証しました。すべての SonarQube リリースとの
